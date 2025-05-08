@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 
+ // 標準ターミナルの割り込み
 void enableNonBlockingInput() {
     struct termios ttystate;
 
@@ -27,20 +28,19 @@ void disableNonBlockingInput() {
     tcsetattr(STDIN_FILENO, TCSANOW, &ttystate);
 }
 
-void clear_screen() {
-    printf("\033[2J");    // ANSIエスケープコードで画面クリア
-}
-
-
 int main() {
+    // initializing gamemanager
     GameManager gm;
     initGame(&gm);
+
+    // Unitの生成
 
     const char* shape1[] = {
         "  -  -  ",
         "[@]  [@]",
         "  WWWW  "
     };
+
     const char* shape2[] = {
         "  -  -  ",
         "[X]  [X]",
@@ -68,7 +68,9 @@ int main() {
     addUnit(&gm, cell_up);
     addUnit(&gm, cell_down);
 
-    enableNonBlockingInput();
+    //
+
+    enableNonBlockingInput(); // 割り込み禁止
     char key = 0;
 
     while (1) {
@@ -80,20 +82,23 @@ int main() {
 
         if (ch != EOF) {
             key = ch;
+            // 操作: 横移動のみ可能
             if (ch == 'a') player1->x--;
             if (ch == 'd') player1->x++;
             if (ch == 'q') break;  // 'q'で終了
+
+            // player1が壁に埋まったら元の位置にずらす。（擬似的な当たり判定）
             if (isTouching(player1, wall_left)) player1->x++;
             if (isTouching(player1, wall_right)) player1->x--;
             if (isTouching(player1, cell_down)) player1->y++;
             if (isTouching(player1, cell_up)) player1->y--;
-            update(&gm, key);
+            update(&gm, key); // プレイヤーの位置が変わって時点で更新: 適宜更新するタイミングに挿入する
         }
 
-        usleep(50000);
+        usleep(50000);// 0.05秒
     }
 
     disableNonBlockingInput();
-    cleanupGame(&gm);
+    cleanupGame(&gm); //メモリクリア
     return 0;
 }
