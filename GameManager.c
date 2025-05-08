@@ -17,6 +17,18 @@ void addUnit(GameManager* gm, Unit* unit) {
     }
 }
 
+void removeUnit(GameManager* gm, const Unit* unit) {
+    for (int i = 0; i < gm->unitCount; i++) {
+        if (gm->unitList[i] == unit) {
+            for (int k = i; k < gm->unitCount; k++) {
+                gm->unitList[k] = gm->unitList[k+1];
+            }
+            gm->unitCount--;
+            break;
+        }
+    }
+}
+
 void update(GameManager* gm, const char key) {
 
     printf("\n\nYou are pressing a key: %c\n\n\n", key);

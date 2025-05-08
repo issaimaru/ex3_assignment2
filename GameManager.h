@@ -16,7 +16,9 @@ typedef struct {
 
 void initGame(GameManager* gm);
 void addUnit(GameManager* gm, Unit* unit);
+void removeUnit(GameManager* gm, const Unit* unit);
 void update(GameManager* gm, char key);
 void cleanupGame(GameManager* gm);
+
 
 #endif //GAMEMANAGER_H
