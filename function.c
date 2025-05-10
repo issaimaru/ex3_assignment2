@@ -9,7 +9,7 @@
 #include <stdbool.h>
 
 //棒を動かす関数
-void moveBar(struct Bar *bar, struct Ball *ball,char key){
+void moveBar(Bar *bar, Ball *ball,char key){
     // TODO : スクリーン超過判定の検討
     switch(key) {
         case LEFT_KEY:
@@ -47,18 +47,19 @@ block has a width and height.
      (x,y) ->   --------  <- (x+width,y)
 */
 
-void AABBJudge(struct Ball *ball, struct Block *block){
+void AABBJudge(Ball *ball, Block *block){
     //直線的と仮定すると，t0 = (P1 - P2)/vの時に衝突する．
 
+    double t_0;
     //左右に衝突する場合
     if ((*ball).dx > 0){
-        double t_0 = ((*block).x - ((*ball).x + (*ball).radious)) / (*ball).dx;
-    }else if ((*ball).dx < 0){
-        double t_0 = ((*block).x + (*block).width - ((*ball).x - (*ball).radious)) / (*ball).dx;
+        t_0 = ((*block).x - ((*ball).x + (*ball).radius)) / (*ball).dx;
+    }else{
+        t_0 = ((*block).x + (*block).width - ((*ball).x - (*ball).radius)) / (*ball).dx;
     } 
 
     if(t_0 > 0 && t_0 < 1) {
-        if(((*ball).y + (*ball).radious) + (*ball).dy * t_0 > (*block).y && ((*ball).y - (*ball).radious) + (*ball).dy * t_0 < (*block).y + (*block).height){
+        if(((*ball).y + (*ball).radius) + (*ball).dy * t_0 > (*block).y && ((*ball).y - (*ball).radius) + (*ball).dy * t_0 < (*block).y + (*block).height){
             //衝突した場合，ボールの速度を反転させる
             (*ball).dx = -(*ball).dx;
             //ブロックを壊す
@@ -68,13 +69,13 @@ void AABBJudge(struct Ball *ball, struct Block *block){
 
     //上下に衝突する場合
     if ((*ball).dy > 0){
-        double t_0 = ((*block).y - ((*ball).y + (*ball).radious)) / (*ball).dy;
+        t_0 = ((*block).y - ((*ball).y + (*ball).radius)) / (*ball).dy;
     }else if ((*ball).dy < 0){
-        double t_0 = ((*block).y + (*block).height - ((*ball).y - (*ball).radious)) / (*ball).dy;
+        t_0 = ((*block).y + (*block).height - ((*ball).y - (*ball).radius)) / (*ball).dy;
     }
 
     if(t_0 > 0 && t_0 < 1) {
-        if(((*ball).x + (*ball).radious) + (*ball).dx * t_0 > (*block).x && ((*ball).x - (*ball).radious) + (*ball).dx * t_0 < (*block).x + (*block).width){
+        if(((*ball).x + (*ball).radius) + (*ball).dx * t_0 > (*block).x && ((*ball).x - (*ball).radius) + (*ball).dx * t_0 < (*block).x + (*block).width){
             //衝突した場合，ボールの速度を反転させる
             (*ball).dy = -(*ball).dy;
             //ブロックを壊す
@@ -84,7 +85,7 @@ void AABBJudge(struct Ball *ball, struct Block *block){
 } 
 
 //AABB衝突判定を利用したブロックとボールの衝突判定関数
-void isCollideBlock(struct Ball *ball, struct Block *block, int BlockCount){
+void isCollideBlock(Ball *ball, Block *block, int BlockCount){
     // ボールとブロックの衝突判定
     for (int i = 0; i < BlockCount; i++) {
         if (!block[i].isDestroyed) {

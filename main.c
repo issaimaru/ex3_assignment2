@@ -1,8 +1,17 @@
-//
-// Created by Asahi Isshiki on 25/05/08.
+#include <stdio.h>
+#include <conio.h>
+#include "function.h"
+#include "structs.h"
+
+Bar bar = {100,0,200,300,10};
+Ball ball = {100,50,3,1,1};
+Block block[10] = {100, 100, 0, 0, false};
+
 int main(void) {
-    printf("Hello, World!");
-    printf("\rHey!\n");
+    printf("before: %d %d\n", bar.x,bar.speed);
+    char key = getch();
+    moveBar(&bar, &ball, key);
+    printf("after: %d %d\n", bar.x,bar.speed);
     return 0;
 }
 //
