@@ -7,7 +7,6 @@ typedef struct{
     int x;          // バーのX座標
     int y;          // バーのY座標
     int width;      // バーの幅
-    int height;     // バーの高さ
     int speed;      // バーの移動速度
 }Bar;
 

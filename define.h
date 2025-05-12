@@ -14,7 +14,30 @@
 #define BAR_SPEED_DECREMENT 1
 
 // screen size
-#define SCREEN_WIDTH 800
-
+#define SCREEN_WIDTH 200
+#define SCREEN_HEIGHT 200
 
 #endif // DEFINE_H
+
+/*
+This is ASCII art of the game screen.
+block has a width and height.
+
+         --------------------------------------------------------------------------------------- <- (SCREEN_WIDTH,SCREEN_HEIGHT)
+         |                --------  <- (x+width,y+height)                                      |
+         |                |      |                                                             |
+         |     (x,y) ->   --------  <- (x+width,y)                                             |   
+         |                                                                                     |
+         |                                                                                     |
+         |                                                                                     |
+         |                                                                                     |
+         |                                                                                     |
+         |                                                                                     |
+         |                                                                                     |
+         |                                                                                     |
+         |                                                                                     |
+         |                                                                                     |
+         |                                                                                     |
+         |                    (x,y) ->   --------  <- (x+width,y)                              |
+(0,0) -> --------------------------------------------------------------------------------------- <- (SCLEEN_WIDTH,0)
+*/

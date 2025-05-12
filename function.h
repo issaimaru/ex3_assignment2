@@ -10,6 +10,7 @@
 #include "structs.h"
 
 void moveBar(Bar *bar, Ball *ball,char key);
-void isCollideBlock(Ball *ball, Block *block);
+void moveBall(Ball *ball);
+void isCollideBlock(Ball *ball, Block *block, int BlockCount);
 
 #endif // FUNCTION_H
