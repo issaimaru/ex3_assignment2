@@ -70,17 +70,19 @@ void isCollideBlock(Ball *ball, Block *block, int BlockCount){
             float x_m_block = block[i].x + (float)block[i].width/2;
             float y_m_block = block[i].y + (float)block[i].height/2;
 
-            float x_m_ball = ball.x + (float)ball.radius/2;
-            float y_m_ball = ball.y + (float)ball.radius/2;
+            float x_m_ball = (*ball).x + (float)(*ball).width/2;
+            float y_m_ball = (*ball).y + (float)(*ball).height/2;
 
-            if (abs(x_m_block - x_m_ball) < block[i].width + ball.radius && abs(y_m_block - y_m_ball) < block[i].height + ball.radius) {
+            if (abs(x_m_block - x_m_ball) < block[i].width + (*ball).width && abs(y_m_block - y_m_ball) < block[i].height + (*ball).height) {
                 //TODO:ここに衝突時の処理を記述
                 block[i].isDestroyed = true;
                 //ボールの速度を反転
-                if((*ball).dx > 0){
-                    (*ball).dx = -(*ball).dx
-                }else{
-                    
+                // ボールが右からぶつかった場合
+                if (block[i].x + block[i].width > (*ball).x && block[i].x < (*ball).x + (*ball).width) {
+                    (*ball).dx = -(*ball).dx;
+                }
+                if (block[i].x < (*ball).x + (*ball).width) {
+                    (*ball).dx = -(*ball).dx;
                 }
             }
         }

@@ -13,7 +13,8 @@ typedef struct{
 typedef struct{
     int x;          // ボールのX座標
     int y;          // ボールのY座標
-    int radius;     // ボールの半径
+    int width;      // ボールの幅 
+    int height;     // ボールの高さ （備考：ボールを円形とすることはTeraterm上でできない）
     int dx;         // ボールのX方向の速度
     int dy;         // ボールのY方向の速度
 }Ball;
