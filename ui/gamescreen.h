@@ -7,16 +7,16 @@
 
 #define SCREEN_HEIGHT 25
 #define SCREEN_WIDTH 80
-#include "Unit.h"
+#include "unit.h"
 
 typedef struct {
     int width;
     int height;
-} GameScreen;
+} game_screen;
 
 
-void initScreen(GameScreen* screen);
+void init_screen(game_screen* screen);
 
-void drawScreen(const GameScreen* screen, const Unit** units, const int unitsize);
+void draw_screen(const game_screen* screen, const unit** units, const int unitsize);
 
 #endif //UI_H

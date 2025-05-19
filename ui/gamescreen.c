@@ -2,19 +2,19 @@
 // Created by Asahi Isshiki on 25/05/08.
 //
 
-#include "GameScreen.h"
+#include "gamescreen.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "util.h"
 
-void initScreen(GameScreen* screen) {
+void init_screen(game_screen* screen) {
     screen->height = SCREEN_HEIGHT;
     screen->width = SCREEN_WIDTH;
 }
 
-void drawScreen(const GameScreen* screen, const Unit** units, const int unitsize) {
+void draw_screen(const game_screen* screen, const unit** units, const int unitsize) {
     char buffer[screen->height][screen->width];
 
     for (int y = 0; y < screen->height; y++) {
@@ -23,7 +23,7 @@ void drawScreen(const GameScreen* screen, const Unit** units, const int unitsize
         }
     }
     for (int i = 0; i < unitsize; i++) {
-        const Unit* unit = units[i];
+        const unit* unit = units[i];
         for (int dy = 0; dy < unit->height; dy++) {
             for (int dx = 0; dx < unit->width; dx++) {
                 const int sx = unit->x + dx;

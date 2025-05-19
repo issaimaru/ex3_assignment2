@@ -2,13 +2,13 @@
 // Created by Asahi Isshiki on 25/05/08.
 //
 
-#include "Unit.h"
+#include "unit.h"
 
 #include <stdlib.h>
 #include <string.h>
 
-Unit* createUnit(const int x, const int y, int width, const int height, const char* pattern[]) {
-    Unit* unit = malloc(sizeof(Unit));
+unit* create_unit(const int x, const int y, int width, const int height, const char* pattern[]) {
+    unit* unit = malloc(sizeof(unit));
     unit->x = x;
     unit->y = y;
     unit->width = width;
@@ -24,7 +24,7 @@ Unit* createUnit(const int x, const int y, int width, const int height, const ch
 }
 
 
-void destroyUnit(Unit* unit) {
+void destroy_unit(unit* unit) {
     for (int i = 0; i < unit->height; i++) {
         free(unit->shape[i]);
     }
@@ -32,7 +32,7 @@ void destroyUnit(Unit* unit) {
     free(unit);
 }
 
-int isTouching(const Unit* unit1, const Unit* unit2) {
+int is_touching(const unit* unit1, const unit* unit2) {
     const int x1min = unit1->x;
     const int x1max = unit1->x + unit1->width - 1;
     const int y1min = unit1->y;
