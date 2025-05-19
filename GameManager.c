@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 
+a
+
 void initGame(GameManager* gm) {
     initScreen(&gm->screen);
     gm->unitCount = 0;
