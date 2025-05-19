@@ -1,37 +1,16 @@
-#include "GameManager.h"
-#include "ui/GameScreen.h"
+#include "gamemanager.h"
+#include "ui/gamescreen.h"
 
 #include <unistd.h>
 #include <termios.h>
 #include <fcntl.h>
 #include <stdio.h>
 
- // 標準ターミナルの割り込み
-void enableNonBlockingInput() {
-    struct termios ttystate;
-
-    // 現在のターミナル設定を取得
-    tcgetattr(STDIN_FILENO, &ttystate);
-
-    // 非カノニカルモード、エコーオフ
-    ttystate.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &ttystate);
-
-    // stdinをノンブロッキングに設定
-    fcntl(STDIN_FILENO, F_SETFL, O_NONBLOCK);
-}
-
-void disableNonBlockingInput() {
-    struct termios ttystate;
-    tcgetattr(STDIN_FILENO, &ttystate);
-    ttystate.c_lflag |= ICANON | ECHO;
-    tcsetattr(STDIN_FILENO, TCSANOW, &ttystate);
-}
 
 int main() {
     // initializing gamemanager
-    GameManager gm;
-    initGame(&gm);
+    game_manager gm;
+    init_game(&gm);
 
     // Unitの生成
 
@@ -54,28 +33,27 @@ int main() {
         "================================================================================"
     };
 
-    Unit* player1 = createUnit(10, 5, 8, 3, shape1);
-    Unit* player2 = createUnit(10, 9, 8, 3, shape2);
-    Unit* wall_left = createUnit(0, 0, 1, gm.screen.height, wall);
-    Unit* wall_right = createUnit(gm.screen.width - 1, 0, 1, gm.screen.height, wall);
-    Unit* cell_up = createUnit(0, gm.screen.height - 1, gm.screen.width, 1, cell);
-    Unit* cell_down = createUnit(0, 0, gm.screen.width, 1, cell);
+    unit* player1 = create_unit(10, 5, 8, 3, shape1);
+    unit* player2 = create_unit(10, 9, 8, 3, shape2);
+    unit* wall_left = create_unit(0, 0, 1, gm.screen.height, wall);
+    unit* wall_right = create_unit(gm.screen.width - 1, 0, 1, gm.screen.height, wall);
+    unit* cell_up = create_unit(0, gm.screen.height - 1, gm.screen.width, 1, cell);
+    unit* cell_down = create_unit(0, 0, gm.screen.width, 1, cell);
 
-    addUnit(&gm, player1);
-    addUnit(&gm, player2);
-    addUnit(&gm, wall_right);
-    addUnit(&gm, wall_left);
-    addUnit(&gm, cell_up);
-    addUnit(&gm, cell_down);
+    add_unit(&gm, player1);
+    add_unit(&gm, player2);
+    add_unit(&gm, wall_right);
+    add_unit(&gm, wall_left);
+    add_unit(&gm, cell_up);
+    add_unit(&gm, cell_down);
 
     //
 
-    enableNonBlockingInput(); // 割り込み禁止
     char key = 0;
 
     while (1) {
 
-        const int ch = getchar();
+        const int ch = io_getch();
         if (ch == 27) {
             break;
         }
@@ -89,21 +67,18 @@ int main() {
             if (ch == 'q') break;  // 'q'で終了
 
             // player1が壁に埋まったら元の位置にずらす。（擬似的な当たり判定）
-            if (isTouching(player1, wall_left)) player1->x++;
-            if (isTouching(player1, wall_right)) player1->x--;
-            if (isTouching(player1, cell_down)) {
+            if (is_touching(player1, wall_left)) player1->x++;
+            if (is_touching(player1, wall_right)) player1->x--;
+            if (is_touching(player1, cell_down)) {
                 printf("-----GameOver-----");
                 break;
             };
-            if (isTouching(player1, player2)) removeUnit(&gm, player2);
-            if (isTouching(player1, cell_up)) player1->y--;
+            if (is_touching(player1, player2)) remove_unit(&gm, player2);
+            if (is_touching(player1, cell_up)) player1->y--;
             update(&gm, key); // プレイヤーの位置が変わって時点で更新: 適宜更新するタイミングに挿入する
         }
-
-        usleep(50000);// 0.05秒
     }
 
-    disableNonBlockingInput();
-    cleanupGame(&gm); //メモリクリア
+    cleanup_game(&gm); //メモリクリア
     return 0;
 }

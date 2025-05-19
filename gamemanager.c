@@ -2,22 +2,22 @@
 // Created by Asahi Isshiki on 25/05/08.
 //
 
-#include "GameManager.h"
+#include "gamemanager.h"
 
 #include <stdio.h>
 
-void initGame(GameManager* gm) {
-    initScreen(&gm->screen);
+void init_game(game_manager* gm) {
+    init_screen(&gm->screen);
     gm->unitCount = 0;
 }
 
-void addUnit(GameManager* gm, Unit* unit) {
+void add_unit(game_manager* gm, unit* unit) {
     if (gm->unitCount < MAX_UNITS) {
         gm->unitList[gm->unitCount++] = unit;
     }
 }
 
-void removeUnit(GameManager* gm, const Unit* unit) {
+void remove_unit(game_manager* gm, const unit* unit) {
     for (int i = 0; i < gm->unitCount; i++) {
         if (gm->unitList[i] == unit) {
             for (int k = i; k < gm->unitCount; k++) {
@@ -29,15 +29,15 @@ void removeUnit(GameManager* gm, const Unit* unit) {
     }
 }
 
-void update(GameManager* gm, const char key) {
+void update(game_manager* gm, const char key) {
 
     printf("\n\nYou are pressing a key: %c\n\n\n", key);
-    drawScreen(&gm->screen, gm->unitList, gm->unitCount);
+    draw_screen(&gm->screen, gm->unitList, gm->unitCount);
     putchar('\n');
 }
 
-void cleanupGame(GameManager* gm) {
+void cleanup_game(game_manager* gm) {
     for (int i = 0; i < gm->unitCount; i++) {
-        destroyUnit(gm->unitList[i]);
+        destroy_unit(gm->unitList[i]);
     }
 }
