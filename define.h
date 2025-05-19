@@ -14,8 +14,8 @@
 #define BAR_SPEED_DECREMENT 1
 
 // screen size
-#define SCREEN_WIDTH 200
-#define SCREEN_HEIGHT 200
+#define SCREEN_WIDTH 500
+#define SCREEN_HEIGHT 500
 
 #endif // DEFINE_H
 
