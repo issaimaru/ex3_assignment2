@@ -2,7 +2,7 @@
 // Created by Asahi Isshiki on 25/05/08.
 //
 
-#include "gamescreen.h"
+#include "ui/gamescreen.h"
 
 #include <stdio.h>
 #include <stdlib.h>

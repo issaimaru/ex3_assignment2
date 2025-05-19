@@ -5,9 +5,9 @@ set(CMAKE_C_STANDARD 11)
 
 add_executable(ex3_assignment2
         main.c
-        ui/GameScreen.c
-        ui/Unit.c
-        ui/Unit.h
+        gamescreen.c
+        unit.c
+        unit.h
         GameManager.c
         GameManager.h
 )

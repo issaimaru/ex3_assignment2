@@ -1,5 +1,5 @@
 #include "gamemanager.h"
-#include "ui/gamescreen.h"
+#include "gamescreen.h"
 
 #include <unistd.h>
 #include <termios.h>

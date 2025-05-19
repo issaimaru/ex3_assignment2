@@ -4,7 +4,7 @@
 
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
-#include "ui/gamescreen.h"
+#include "gamescreen.h"
 
 #define MAX_UNITS 100
 
