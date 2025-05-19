@@ -9,6 +9,7 @@
 #include "function.h"
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 //棒を動かす関数
 //デバック完了、エラーなし(2025/05/12)
@@ -60,49 +61,28 @@ void moveBall(Ball *ball){
     }
 }
 
-void AABBJudge(Ball *ball, Block *block){
-    //直線的と仮定すると，t0 = (P1 - P2)/vの時に衝突する．
 
-    double t_0;
-    //左右に衝突する場合
-    if ((*ball).dx > 0){
-        t_0 = ((*block).x - ((*ball).x + (*ball).radius)) / (*ball).dx;
-    }else{
-        t_0 = ((*block).x + (*block).width - ((*ball).x - (*ball).radius)) / (*ball).dx;
-    } 
-
-    if(t_0 > 0 && t_0 < 1) {
-        if(((*ball).y + (*ball).radius) + (*ball).dy * t_0 > (*block).y && ((*ball).y - (*ball).radius) + (*ball).dy * t_0 < (*block).y + (*block).height){
-            //衝突した場合，ボールの速度を反転させる
-            (*ball).dx = -(*ball).dx;
-            //ブロックを壊す
-            (*block).isDestroyed = true;
-        }
-    }
-
-    //上下に衝突する場合
-    if ((*ball).dy > 0){
-        t_0 = ((*block).y - ((*ball).y + (*ball).radius)) / (*ball).dy;
-    }else if ((*ball).dy < 0){
-        t_0 = ((*block).y + (*block).height - ((*ball).y - (*ball).radius)) / (*ball).dy;
-    }
-
-    if(t_0 > 0 && t_0 < 1) {
-        if(((*ball).x + (*ball).radius) + (*ball).dx * t_0 > (*block).x && ((*ball).x - (*ball).radius) + (*ball).dx * t_0 < (*block).x + (*block).width){
-            //衝突した場合，ボールの速度を反転させる
-            (*ball).dy = -(*ball).dy;
-            //ブロックを壊す
-            (*block).isDestroyed = true;
-        }
-    }
-} 
-
-//AABB衝突判定を利用したブロックとボールの衝突判定関数
+//矩形と矩形の衝突アルゴリズムを利用したブロックとボールの衝突判定関数
 void isCollideBlock(Ball *ball, Block *block, int BlockCount){
     // ボールとブロックの衝突判定
     for (int i = 0; i < BlockCount; i++) {
         if (!block[i].isDestroyed) {
-            AABBJudge(ball, &block[i]);
+            float x_m_block = block[i].x + (float)block[i].width/2;
+            float y_m_block = block[i].y + (float)block[i].height/2;
+
+            float x_m_ball = ball.x + (float)ball.radius/2;
+            float y_m_ball = ball.y + (float)ball.radius/2;
+
+            if (abs(x_m_block - x_m_ball) < block[i].width + ball.radius && abs(y_m_block - y_m_ball) < block[i].height + ball.radius) {
+                //TODO:ここに衝突時の処理を記述
+                block[i].isDestroyed = true;
+                //ボールの速度を反転
+                if((*ball).dx > 0){
+                    (*ball).dx = -(*ball).dx
+                }else{
+                    
+                }
+            }
         }
     }
 }
