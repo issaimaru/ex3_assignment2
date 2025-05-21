@@ -1,0 +1,71 @@
+/dts-v1/;
+
+/ {
+	#address-cells = <2>;
+	#size-cells = <2>;
+
+	chosen {
+		//bootargs = "console=hvc0";
+		bootargs = "console=ttyUL0";
+	};
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		timebase-frequency = <1250000>;
+
+		cpu@0 {
+			device_type = "cpu";
+			reg = <0>;
+			status = "okay";
+			compatible = "riscv";
+			riscv,isa = "rv64i";
+			mmu-type = "riscv,sv39";
+			clock-frequency = <20000000>;
+
+			L10: interrupt-controller {
+				#interrupt-cells = <1>;
+				compatible = "riscv,cpu-intc";
+				interrupt-controller;
+			};
+		};
+	};
+
+	L15: clint@10010000 {
+		compatible = "riscv,clint0";
+		interrupts-extended = <&L10 3 &L10 7>;
+		reg = <0x0 0x10010000 0x0 0x10000>;
+		reg-names = "control";
+	};
+
+	L20: interrupt-controller@10020000 {
+		#interrupt-cells = <1>;
+		compatible = "c2rtl,lic0";
+		interrupt-controller;
+		interrupts-extended = <&L10 9 &L10 11>;
+		reg = <0x0 0x10020000 0x0 0x00001000>;
+		riscv,ndev = <32>;
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x0 0x80000000 0x1 0x00000000>;
+	};
+
+	uart@10000000 {
+		compatible = "xlnx,opb-uartlite-1.00.b";
+		reg = <0x0 0x10000000 0x0 0x00000010>;
+		interrupt-parent = <&L20>;
+		interrupts = <0>;
+	};
+/*
+	uart@64000100 {
+		compatible = "ns16550a";
+		reg = <0x0 0x64011000 0x0 0x00000020>;
+		reg-shift = <2>;
+		current-speed = <115200>;
+		clock-frequency = <125000000>;
+	};
+*/
+};

@@ -7,7 +7,10 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 
-void moveBar(struct Bar *bar, struct Ball *ball,char key);
-void isCollideBlock(struct Ball *ball, struct Block *block);
+#include "structs.h"
+
+void moveBar(Bar *bar, Ball *ball,char key);
+void moveBall(Ball *ball);
+void isCollideBlock(Ball *ball, Block *block, int BlockCount);
 
 #endif // FUNCTION_H

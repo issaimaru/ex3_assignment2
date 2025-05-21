@@ -80,5 +80,6 @@ int main() {
     }
 
     cleanup_game(&gm); //メモリクリア
+
     return 0;
 }

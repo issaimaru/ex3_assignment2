@@ -6,11 +6,14 @@
 
 #include "define.h"
 #include "structs.h"
+#include "function.h"
+#include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 //棒を動かす関数
-void moveBar(struct Bar *bar, struct Ball *ball,char key){
-    // TODO : スクリーン超過判定の検討
+//デバック完了、エラーなし(2025/05/12)
+void moveBar(Bar *bar, Ball *ball,char key){
     switch(key) {
         case LEFT_KEY:
             if((*bar).x > 0){
@@ -35,60 +38,59 @@ void moveBar(struct Bar *bar, struct Ball *ball,char key){
                 (*bar).speed -= BAR_SPEED_DECREMENT;
             }
             break;
+
+        default:
+            break;
     }
 }
 
-/*
-This is ASCII art of a block.
-block has a width and height.
+//デバック完了、エラーなし(2025/05/12)
+void moveBall(Ball *ball){
+    //ボールの移動
+    (*ball).x += (*ball).dx;
+    (*ball).y += (*ball).dy;
 
-                --------  <- (x+width,y+height)
-                |      |  
-     (x,y) ->   --------  <- (x+width,y)
-*/
-
-void AABBJudge(struct Ball *ball, struct Block *block){
-    //直線的と仮定すると，t0 = (P1 - P2)/vの時に衝突する．
-
-    //左右に衝突する場合
-    if ((*ball).dx > 0){
-        double t_0 = ((*block).x - ((*ball).x + (*ball).radious)) / (*ball).dx;
-    }else if ((*ball).dx < 0){
-        double t_0 = ((*block).x + (*block).width - ((*ball).x - (*ball).radious)) / (*ball).dx;
-    } 
-
-    if(t_0 > 0 && t_0 < 1) {
-        if(((*ball).y + (*ball).radious) + (*ball).dy * t_0 > (*block).y && ((*ball).y - (*ball).radious) + (*ball).dy * t_0 < (*block).y + (*block).height){
-            //衝突した場合，ボールの速度を反転させる
-            (*ball).dx = -(*ball).dx;
-            //ブロックを壊す
-            (*block).isDestroyed = true;
-        }
+    //画面の端に当たった場合、ボールの速度を反転させる
+    if ((*ball).x < 0 || (*ball).x + (*ball).width > SCREEN_WIDTH) {
+        (*ball).x = (*ball).x < 0 ? 0 : SCREEN_WIDTH - (*ball).width;
+        (*ball).dx = -(*ball).dx;
     }
-
-    //上下に衝突する場合
-    if ((*ball).dy > 0){
-        double t_0 = ((*block).y - ((*ball).y + (*ball).radious)) / (*ball).dy;
-    }else if ((*ball).dy < 0){
-        double t_0 = ((*block).y + (*block).height - ((*ball).y - (*ball).radious)) / (*ball).dy;
+    if ((*ball).y < 0 || (*ball).y + (*ball).height > SCREEN_HEIGHT) {
+        (*ball).y = (*ball).y < 0 ? 0 : SCREEN_HEIGHT - (*ball).height;
+        (*ball).dy = -(*ball).dy;
     }
+}
 
-    if(t_0 > 0 && t_0 < 1) {
-        if(((*ball).x + (*ball).radious) + (*ball).dx * t_0 > (*block).x && ((*ball).x - (*ball).radious) + (*ball).dx * t_0 < (*block).x + (*block).width){
-            //衝突した場合，ボールの速度を反転させる
-            (*ball).dy = -(*ball).dy;
-            //ブロックを壊す
-            (*block).isDestroyed = true;
-        }
-    }
-} 
 
-//AABB衝突判定を利用したブロックとボールの衝突判定関数
-void isCollideBlock(struct Ball *ball, struct Block *block, int BlockCount){
+//矩形と矩形の衝突アルゴリズムを利用したブロックとボールの衝突判定関数
+void isCollideBlock(Ball *ball, Block *block, int BlockCount){
     // ボールとブロックの衝突判定
     for (int i = 0; i < BlockCount; i++) {
         if (!block[i].isDestroyed) {
-            AABBJudge(ball, &block[i]);
+            // 中心座標を求める
+            float x_m_block = block[i].x + (float)block[i].width/2;
+            float y_m_block = block[i].y + (float)block[i].height/2;
+
+            float x_m_ball = (*ball).x + (float)(*ball).width/2;
+            float y_m_ball = (*ball).y + (float)(*ball).height/2;
+
+            float x_d_all = (float)((*ball).width + block[i].width) / 2.0f; //2つの矩形が重なった時の中心x座標の差
+            float y_d_all = (float)((*ball).height + block[i].height) / 2.0f; //2つの矩形が重なった時の中心y座標の差
+
+            printf("%d %d %f\n",abs(x_m_block - x_m_ball),block[i].width + (*ball).width,x_d_all);
+            if ((float)abs(x_m_block - x_m_ball) < x_d_all && (float)abs(y_m_block - y_m_ball) < y_d_all) {
+                block[i].isDestroyed = true;
+                //ボールの速度を反転
+
+                if(abs(x_m_block - x_m_ball) <= x_d_all){
+                    (*ball).dx = -(*ball).dx;
+                }
+                if(abs(y_m_block - y_m_ball) <= y_d_all){
+                    (*ball).dy = -(*ball).dy;
+                }
+                printf("%f %f %f\n",x_m_block,x_m_ball,x_m_block - x_m_ball);
+                printf("%d %d %f\n",(*ball).width,block[i].width,x_d_all );
+            }
         }
     }
 }
