@@ -1,83 +1,85 @@
+#include "gamemanager.h"
+#include "gamescreen.h"
+
+#include <unistd.h>
+#include <termios.h>
+#include <fcntl.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include "define.h"
-#include "function.h"
-#include "structs.h"
-
-/*
-テストケース1(左から衝突)
-
-Ball ball = {60, 110, 1, 1, 7, 0}; // x, y, width, height, dx, dy
-Block blocks[2] = {
-    {110, 110, 20, 20, false}, // 衝突する位置
-    {200, 110, 20, 20, false}  // 衝突しない位置
-};
-
-結果：クリア
-
-テストケース2(右から衝突後、左から衝突)
-
-Ball ball = {60, 110, 1, 1, -7, 0}; // x, y, width, height, dx, dy
-Block blocks[2] = {
-    {0, 110, 20, 20, false}, // 衝突する位置
-    {200, 110, 20, 20, false}  // 衝突しない位置
-};
-
-結果：クリア
-
-テストケース3(上から衝突後、下から衝突)
-Ball ball = {200, 110, 1, 1, 0 , -5}; // x, y, width, height, dx, dy
-Block blocks[2] = {
-    {200, 200, 20, 20, false}, // 衝突する位置
-    {200, 50, 20, 20, false}  // 衝突しない位置
-};
-
-結果：クリア
-
-テストケース4(縁の部分に衝突）
-Ball ball = {0, 0, 1, 1, 5 , 5}; // x, y, width, height, dx, dy
-Block blocks[2] = {
-    {200, 200, 20, 20, false}, // 衝突する位置
-    {300, 300, 20, 20, false}  // 衝突しない位置
-};
-
-結果：クリア
 
 
+int main() {
+    // initializing gamemanager
+    game_manager gm;
+    init_game(&gm);
 
-*/
+    // Unitの生成
 
-int main(void) {
-    // テスト用のボールとブロックを用意
-    Ball ball = {0, 0, 1, 1, 5 , 5}; // x, y, width, height, dx, dy
-    Block blocks[2] = {
-        {190, 200, 20, 20, false}, // 衝突する位置
-        {290, 110, 20, 20, false}  // 衝突しない位置
+    const char* shape1[] = {
+        "  -  -  ",
+        "[@]  [@]",
+        "  WWWW  "
     };
 
-    printf("Before collision:\n");
-    printf("Ball: x=%d, y=%d, dx=%d, dy=%d\n", ball.x, ball.y, ball.dx, ball.dy);
-    for (int i = 0; i < 2; i++) {
-        printf("Block %d: x=%d, y=%d, destroyed=%d\n", i, blocks[i].x, blocks[i].y, blocks[i].isDestroyed);
+    const char* shape2[] = {
+        "  -  -  ",
+        "[X]  [X]",
+        "  |__|  "
+    };
+    const char* wall[] = {
+        "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|"
+    };
+
+    const char* cell[] = {
+        "================================================================================"
+    };
+
+    unit* player1 = create_unit(10, 5, 8, 3, shape1);
+    unit* player2 = create_unit(10, 9, 8, 3, shape2);
+    unit* wall_left = create_unit(0, 0, 1, gm.screen.height, wall);
+    unit* wall_right = create_unit(gm.screen.width - 1, 0, 1, gm.screen.height, wall);
+    unit* cell_up = create_unit(0, gm.screen.height - 1, gm.screen.width, 1, cell);
+    unit* cell_down = create_unit(0, 0, gm.screen.width, 1, cell);
+
+    add_unit(&gm, player1);
+    add_unit(&gm, player2);
+    add_unit(&gm, wall_right);
+    add_unit(&gm, wall_left);
+    add_unit(&gm, cell_up);
+    add_unit(&gm, cell_down);
+
+    //
+
+    char key = 0;
+
+    while (1) {
+
+        const int ch = io_getch();
+        if (ch == 27) {
+            break;
+        }
+        if (ch != EOF) {
+            key = ch;
+            // 操作
+            if (ch == 'w') player1->y++;
+            if (ch == 's') player1->y--;
+            if (ch == 'a') player1->x--;
+            if (ch == 'd') player1->x++;
+            if (ch == 'q') break;  // 'q'で終了
+
+            // player1が壁に埋まったら元の位置にずらす。（擬似的な当たり判定）
+            if (is_touching(player1, wall_left)) player1->x++;
+            if (is_touching(player1, wall_right)) player1->x--;
+            if (is_touching(player1, cell_down)) {
+                printf("-----GameOver-----");
+                break;
+            };
+            if (is_touching(player1, player2)) remove_unit(&gm, player2);
+            if (is_touching(player1, cell_up)) player1->y--;
+            update(&gm, key); // プレイヤーの位置が変わって時点で更新: 適宜更新するタイミングに挿入する
+        }
     }
 
-    printf("Press any key to simulate ball movement and collision detection...\n");
-
-    int num = 0;
-    while(1) {
-        char key = getchar();
-        if (key == 'q') {
-            break; // 'q'を押すと終了
-        }
-        moveBall(&ball); // ボールを移動
-        isCollideBlock(&ball, blocks, 2); // 衝突判定を実行
-        printf("\nAfter collision[%d回目]:\n", num++);
-        printf("Ball: x=%d, y=%d, dx=%d, dy=%d\n", ball.x, ball.y, ball.dx, ball.dy);
-
-        for (int i = 0; i < 2; i++) {
-            printf("Block %d: x=%d, y=%d, destroyed=%d\n", i, blocks[i].x, blocks[i].y, blocks[i].isDestroyed);
-        }
-    }
+    cleanup_game(&gm); //メモリクリア
 
     return 0;
 }
