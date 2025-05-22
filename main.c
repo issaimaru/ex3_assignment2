@@ -53,7 +53,7 @@ int main() {
     init_buffer();
     print_buffer();
 
-    // ここにball, wall, bar
+    // ここにball, wall, barの宣言
 
     set_mtimer_interval(300);
     timer_interrupt_hook = timer_hook;
