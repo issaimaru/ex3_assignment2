@@ -61,7 +61,7 @@ void moveBall(Ball *ball){
     }
 }
 
-
+//デバッグ完了、エラーなし（2025/05/19）
 //矩形と矩形の衝突アルゴリズムを利用したブロックとボールの衝突判定関数
 void isCollideBlock(Ball *ball, Block *block, int BlockCount){
     // ボールとブロックの衝突判定
@@ -77,7 +77,6 @@ void isCollideBlock(Ball *ball, Block *block, int BlockCount){
             float x_d_all = (float)((*ball).width + block[i].width) / 2.0f; //2つの矩形が重なった時の中心x座標の差
             float y_d_all = (float)((*ball).height + block[i].height) / 2.0f; //2つの矩形が重なった時の中心y座標の差
 
-            printf("%d %d %f\n",abs(x_m_block - x_m_ball),block[i].width + (*ball).width,x_d_all);
             if ((float)abs(x_m_block - x_m_ball) < x_d_all && (float)abs(y_m_block - y_m_ball) < y_d_all) {
                 block[i].isDestroyed = true;
                 //ボールの速度を反転
@@ -88,8 +87,6 @@ void isCollideBlock(Ball *ball, Block *block, int BlockCount){
                 if(abs(y_m_block - y_m_ball) <= y_d_all){
                     (*ball).dy = -(*ball).dy;
                 }
-                printf("%f %f %f\n",x_m_block,x_m_ball,x_m_block - x_m_ball);
-                printf("%d %d %f\n",(*ball).width,block[i].width,x_d_all );
             }
         }
     }

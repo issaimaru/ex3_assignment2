@@ -2,8 +2,11 @@
 #include "gamescreen.h"
 
 #include <unistd.h>
+#ifdef __linux__
 #include <termios.h>
+#endif
 #include <fcntl.h>
+#include <io.h>
 #include <stdio.h>
 
 
