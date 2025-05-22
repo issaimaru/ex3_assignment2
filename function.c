@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <math.h>
 
 //棒を動かす関数
 //デバック完了、エラーなし(2025/05/12)
@@ -77,19 +78,39 @@ void isCollideBlock(Ball *ball, Block *block, int BlockCount){
             float x_d_all = (float)((*ball).width + block[i].width) / 2.0f; //2つの矩形が重なった時の中心x座標の差
             float y_d_all = (float)((*ball).height + block[i].height) / 2.0f; //2つの矩形が重なった時の中心y座標の差
 
-            printf("%d %d %f\n",abs(x_m_block - x_m_ball),block[i].width + (*ball).width,x_d_all);
-            if ((float)abs(x_m_block - x_m_ball) < x_d_all && (float)abs(y_m_block - y_m_ball) < y_d_all) {
+            if (fabs(x_m_block - x_m_ball) < x_d_all && fabs(y_m_block - y_m_ball) < y_d_all) {
                 block[i].isDestroyed = true;
                 //ボールの速度を反転
 
-                if(abs(x_m_block - x_m_ball) <= x_d_all){
+                float x_overlap = x_d_all - fabs(x_m_block - x_m_ball);
+                float y_overlap = y_d_all - fabs(y_m_block - y_m_ball);
+
+                // 前フレームの中心座標を計算
+                float prev_x_m_ball = x_m_ball - (*ball).dx;
+                float prev_y_m_ball = y_m_ball - (*ball).dy;
+                float prev_x_diff = fabs(x_m_block - prev_x_m_ball);
+                float prev_y_diff = fabs(y_m_block - prev_y_m_ball);
+
+                int was_x_separated = (prev_x_diff >= x_d_all);
+                int was_y_separated = (prev_y_diff >= y_d_all);
+
+                if (was_x_separated && !was_y_separated) {
+                    // 前フレームはx軸で離れていた→x軸で衝突
                     (*ball).dx = -(*ball).dx;
-                }
-                if(abs(y_m_block - y_m_ball) <= y_d_all){
+                } else if (!was_x_separated && was_y_separated) {
+                    // 前フレームはy軸で離れていた→y軸で衝突
                     (*ball).dy = -(*ball).dy;
+                } else {
+                    // 斜め進入や両方重なりの場合は最小overlapで判定
+                    float x_overlap = x_d_all - fabs(x_m_block - x_m_ball);
+                    float y_overlap = y_d_all - fabs(y_m_block - y_m_ball);
+                    if (x_overlap < y_overlap) {
+                        (*ball).dx = -(*ball).dx;
+                    } else {
+                        (*ball).dy = -(*ball).dy;
+                    }
                 }
-                printf("%f %f %f\n",x_m_block,x_m_ball,x_m_block - x_m_ball);
-                printf("%d %d %f\n",(*ball).width,block[i].width,x_d_all );
+
             }
         }
     }
