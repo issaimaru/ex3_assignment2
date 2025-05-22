@@ -12,6 +12,19 @@
 #include <stdlib.h>
 #include <math.h>
 
+void blockinit(Block *block){
+    //ブロックの初期化
+    for (int j=0; j < BLOCK_ROWS; j++) {
+        for (int i = 0; i < BLOCK_NUM / BLOCK_ROWS; i++) {
+            block[i + j * (BLOCK_NUM / BLOCK_ROWS)].x = i * BLOCK_WIDTH;
+            block[i + j * (BLOCK_NUM / BLOCK_ROWS)].y = (SCREEN_HEIGHT - BLOCK_HEIGHT * BLOCK_ROWS) + j * BLOCK_HEIGHT;
+            block[i + j * (BLOCK_NUM / BLOCK_ROWS)].width = BLOCK_WIDTH;
+            block[i + j * (BLOCK_NUM / BLOCK_ROWS)].height = BLOCK_HEIGHT;
+            block[i + j * (BLOCK_NUM / BLOCK_ROWS)].isDestroyed = false;
+        }
+    }
+}
+
 //棒を動かす関数
 //デバック完了、エラーなし(2025/05/12)
 void moveBar(Bar *bar, Ball *ball,char key){
@@ -64,9 +77,9 @@ void moveBall(Ball *ball){
 
 
 //矩形と矩形の衝突アルゴリズムを利用したブロックとボールの衝突判定関数
-void isCollideBlock(Ball *ball, Block *block, int BlockCount){
+void isCollideBlock(Ball *ball, Block *block){
     // ボールとブロックの衝突判定
-    for (int i = 0; i < BlockCount; i++) {
+    for (int i = 0; i < BLOCK_NUM; i++) {
         if (!block[i].isDestroyed) {
             // 中心座標を求める
             float x_m_block = block[i].x + (float)block[i].width/2;

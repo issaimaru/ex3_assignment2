@@ -14,8 +14,14 @@
 #define BAR_SPEED_DECREMENT 1
 
 // screen size
-#define SCREEN_WIDTH 500
-#define SCREEN_HEIGHT 500
+#define SCREEN_WIDTH 100
+#define SCREEN_HEIGHT 100
+
+// block
+#define BLOCK_NUM 20
+#define BLOCK_WIDTH 5 //ブロックの幅
+#define BLOCK_HEIGHT 2 //ブロックの高さ
+#define BLOCK_ROWS 2 //ブロックの段数
 
 #endif // DEFINE_H
 
