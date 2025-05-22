@@ -2,25 +2,52 @@
 // Created by Asahi Isshiki on 25/05/08.
 //
 
-#include "ui/unit.h"
+#include "unit.h"
+#include "define.h"
+
+#include <stdio.h>
 
 #include <stdlib.h>
 #include <string.h>
 
 unit* create_unit(const int x, const int y, int width, const int height, const char* pattern[]) {
-    unit* unit = malloc(sizeof(unit));
-    unit->x = x;
-    unit->y = y;
-    unit->width = width;
-    unit->height = height;
-
-    unit->shape = malloc(sizeof(char*) * height);
-    for (int i = 0; i < height; i++) {
-        unit->shape[height - i - 1] = malloc(width + 1);
-        strncpy(unit->shape[height - i - 1], pattern[i], width);
+    if (width <= 0 || height <= 0 || !pattern) {
+        return NULL;
     }
 
-    return unit;
+    unit* u = malloc(sizeof(unit));
+    if (!u) {
+        return NULL;
+    }
+
+    u->x = x;
+    u->y = SCREEN_HEIGHT - y - height;
+    u->width = width;
+    u->height = height;
+
+    u->shape = malloc(sizeof(char*) * height);
+    if (!u->shape) {
+        free(u);
+        return NULL;
+    }
+
+    for (int i = 0; i < height; i++) {
+        if (!pattern[i]) {
+            u->shape[i] = NULL;
+            continue;
+        }
+
+        u->shape[i] = malloc(width + 1);
+        if (!u->shape[i]) {
+            continue;
+        }
+
+        memset(u->shape[i], ' ', width);
+        strncpy(u->shape[i], pattern[i], width);
+        u->shape[i][width] = '\0';
+    }
+
+    return u;
 }
 
 
