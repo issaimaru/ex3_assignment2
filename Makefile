@@ -20,7 +20,7 @@ MEM_START=0x00001000
 DATA_START=0x00020000
 
 LDFLAGS= -I. -nostartfiles -static -Wl,--defsym=MEM_START=$(MEM_START),--defsym=DATA_START=$(DATA_START),-T,vcu108.lds
-RV_SRC= entry.S printf.c io.c io.h function.c function.h structs.h mhandler.S ../rv32_io_setting.h
+RV_SRC= entry.S printf.c io.c io.h function.c function.h monitor.h monitor.c structs.h mhandler.S ../rv32_io_setting.h
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -30,7 +30,7 @@ RV_SRC= entry.S printf.c io.c io.h function.c function.h structs.h mhandler.S ..
 all: $(OUT).out $(OUT).dump a.out
 	cp $(OUT).out $(OUT2).out
 	cp $(OUT).dump $(OUT2).dump
-	# ../bin/release/rv32.exe $(OUT2).out
+	../bin/release/rv32.exe $(OUT2).out
 	./a.out
 	rm $(OUT).out
 	rm $(OUT).dump
@@ -47,7 +47,7 @@ $(OUT).dump: $(OUT).out
 	$(DUMP) -D $^ > $@
 
 a.out: $(SRC_C)
-	gcc $(CFLAGS) -DNATIVE_MODE $(SRC_C) $(SRC_C1) -o $@ -lm
+	gcc $(CFLAGS) -DNATIVE_MODE $(SRC_C) $(SRC_C1) monitor.c -o $@ -lm
 
 clean:
 	rm -rf $(OUT).out *.o $(OUT).dump

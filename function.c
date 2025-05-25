@@ -8,7 +8,6 @@
 #include "structs.h"
 #include "function.h"
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -20,7 +19,7 @@ void blockinit(Block *block){
             block[i + j * (BLOCK_NUM / BLOCK_ROWS)].y = (SCREEN_HEIGHT - BLOCK_HEIGHT * BLOCK_ROWS) + j * BLOCK_HEIGHT;
             block[i + j * (BLOCK_NUM / BLOCK_ROWS)].width = BLOCK_WIDTH;
             block[i + j * (BLOCK_NUM / BLOCK_ROWS)].height = BLOCK_HEIGHT;
-            block[i + j * (BLOCK_NUM / BLOCK_ROWS)].isDestroyed = false;
+            block[i + j * (BLOCK_NUM / BLOCK_ROWS)].isNotDestroyed = 1;
         }
     }
 }
@@ -75,34 +74,44 @@ void moveBall(Ball *ball){
     }
 }
 
+void isCollideBar(Ball *ball, Bar *bar) {
+    if((*ball).y == 0 && ((*ball).x > (*bar).x && (*ball).x < (*bar).x + (*bar).width)) {
+        (*ball).dy = -(*ball).dy;
+    }else if((*ball).y == 0){
+        (*bar).width -= 1;
+        if((*bar).width < 1){
+            (*bar).width = 1; //バーの幅が1未満にならないようにする
+        }
+    }
+}
 
 //矩形と矩形の衝突アルゴリズムを利用したブロックとボールの衝突判定関数
 void isCollideBlock(Ball *ball, Block *block){
     // ボールとブロックの衝突判定
     for (int i = 0; i < BLOCK_NUM; i++) {
-        if (!block[i].isDestroyed) {
+        if (block[i].isNotDestroyed == 1) {
             // 中心座標を求める
-            float x_m_block = block[i].x + (float)block[i].width/2;
-            float y_m_block = block[i].y + (float)block[i].height/2;
+            int x_m_block = block[i].x + block[i].width/2;
+            int y_m_block = block[i].y + block[i].height/2;
 
-            float x_m_ball = (*ball).x + (float)(*ball).width/2;
-            float y_m_ball = (*ball).y + (float)(*ball).height/2;
+            int x_m_ball = (*ball).x + (*ball).width/2;
+            int y_m_ball = (*ball).y + (*ball).height/2;
 
-            float x_d_all = (float)((*ball).width + block[i].width) / 2.0f; //2つの矩形が重なった時の中心x座標の差
-            float y_d_all = (float)((*ball).height + block[i].height) / 2.0f; //2つの矩形が重なった時の中心y座標の差
+            int x_d_all = ((*ball).width + block[i].width) / 2; //2つの矩形が重なった時の中心x座標の差
+            int y_d_all = ((*ball).height + block[i].height) / 2; //2つの矩形が重なった時の中心y座標の差
 
-            if (fabs(x_m_block - x_m_ball) < x_d_all && fabs(y_m_block - y_m_ball) < y_d_all) {
-                block[i].isDestroyed = true;
+            if (abs(x_m_block - x_m_ball) < x_d_all && abs(y_m_block - y_m_ball) < y_d_all) {
+                block[i].isNotDestroyed = 0;
                 //ボールの速度を反転
 
-                float x_overlap = x_d_all - fabs(x_m_block - x_m_ball);
-                float y_overlap = y_d_all - fabs(y_m_block - y_m_ball);
+                int x_overlap = x_d_all - abs(x_m_block - x_m_ball);
+                int y_overlap = y_d_all - abs(y_m_block - y_m_ball);
 
                 // 前フレームの中心座標を計算
-                float prev_x_m_ball = x_m_ball - (*ball).dx;
-                float prev_y_m_ball = y_m_ball - (*ball).dy;
-                float prev_x_diff = fabs(x_m_block - prev_x_m_ball);
-                float prev_y_diff = fabs(y_m_block - prev_y_m_ball);
+                int prev_x_m_ball = x_m_ball - (*ball).dx*100;
+                int prev_y_m_ball = y_m_ball - (*ball).dy*100;
+                int prev_x_diff = abs(x_m_block - prev_x_m_ball);
+                int prev_y_diff = abs(y_m_block - prev_y_m_ball);
 
                 int was_x_separated = (prev_x_diff >= x_d_all);
                 int was_y_separated = (prev_y_diff >= y_d_all);
@@ -115,8 +124,8 @@ void isCollideBlock(Ball *ball, Block *block){
                     (*ball).dy = -(*ball).dy;
                 } else {
                     // 斜め進入や両方重なりの場合は最小overlapで判定
-                    float x_overlap = x_d_all - fabs(x_m_block - x_m_ball);
-                    float y_overlap = y_d_all - fabs(y_m_block - y_m_ball);
+                    int x_overlap = x_d_all - abs(x_m_block - x_m_ball);
+                    int y_overlap = y_d_all - abs(y_m_block - y_m_ball);
                     if (x_overlap < y_overlap) {
                         (*ball).dx = -(*ball).dx;
                     } else {

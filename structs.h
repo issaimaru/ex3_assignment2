@@ -1,8 +1,6 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-#include <stdbool.h>
-
 typedef struct Bar{
     int x;          // バーのX座標
     int y;          // バーのY座標
@@ -24,7 +22,7 @@ typedef struct Block{
     int y;          // ブロックのY座標
     int width;      // ブロックの幅
     int height;     // ブロックの高さ
-    bool isDestroyed; // ブロックが壊れているかどうか
+    int isNotDestroyed; // ブロックが壊れているかどうか
 }Block;
 
 

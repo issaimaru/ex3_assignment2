@@ -12,6 +12,7 @@
 void blockinit(Block *block);
 void moveBar(Bar *bar, Ball *ball,char key);
 void moveBall(Ball *ball);
+void isCollideBar(Ball *ball, Bar *bar);
 void isCollideBlock(Ball *ball, Block *block);
 
 #endif // FUNCTION_H
