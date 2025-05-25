@@ -42,6 +42,7 @@ void _UARTBuf_putch(char ch) {
 
 char _io_getch(void) {
     UART* uart = _uart[UART_CHAN_ID];
+    while (UART_RX_EMPTY(uart)) {} /// while (rx_empty == 1);
     return uart->data;
 }
 
