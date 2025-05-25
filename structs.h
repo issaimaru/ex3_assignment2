@@ -15,6 +15,7 @@ typedef struct Ball{
     int height;     // ボールの高さ （備考：ボールを円形とすることはTeraterm上でできない）
     int dx;         // ボールのX方向の速度
     int dy;         // ボールのY方向の速度
+    int isGameOver; // ゲームオーバーかどうか
 }Ball;
 
 typedef struct Block{

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "function.h"
 #include "define.h"
 #include "structs.h"
@@ -14,12 +15,12 @@ int end = 0;
 
  // ball, wall, barの宣言
 Bar bar = {0, 0, 10, 1};
-Ball ball = {SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 3, 3, 2, 1};
+Ball ball = {SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 3, 3, 2, 1, 0}; // rand関数は無理
 Block blocks[BLOCK_NUM];
 
 // 画面にbufferの内容を出力する関数
-void print_buffer() {
-    update_buffer(&ball, blocks, &bar, buffer);
+void print_buffer(int mode) {
+    if(mode == 0)update_buffer(&ball, blocks, &bar, buffer);
     printf("\033[1;1H"); // カーソルを画面の左上に移動
     // bufferの内容を出力
 
@@ -32,12 +33,31 @@ void print_buffer() {
     }
 }
 
+void print_moji(const char *moji, int x, int y,int isRow) {
+    if(!isRow) init_buffer(buffer);
+    int len = strlen(moji);
+    for(int i = 0; i < len; i++) {
+        buffer[y][x - len/2 + i] = moji[i];
+    }
+    print_buffer(1);
+}
+
+void print_gameover() {
+    print_moji("GAME OVER", SCREEN_WIDTH/2, SCREEN_HEIGHT/2,0);
+}
+
+void print_initgame(){
+    print_moji("This is a game of Breakout!", SCREEN_WIDTH/2, SCREEN_HEIGHT/2,1);
+    print_moji("please press any key!!", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 1,1);
+}
+
 // タイマー割り込みで画面を更新
 void timer_hook() {
-    print_buffer();
+    print_buffer(0);
 }
 
 int main() {
+    print_gameover();
 #if defined(NATIVE_MODE)
     init_buffer(buffer);
     
@@ -50,7 +70,7 @@ int main() {
         char ch = getchar();
         moveBar(&bar, &ball, ch); // 棒の移動
 
-        print_buffer(); // 画面の更新
+        print_buffer(0); // 画面の更新
      }
 
 #else

@@ -13,12 +13,15 @@
 #define BAR_SPEED_INCREMENT 1
 #define BAR_SPEED_DECREMENT 1
 
+// ball speed definitions
+#define MAX_BALL_SPEED 3
+
 // screen size
-#define SCREEN_WIDTH 30
-#define SCREEN_HEIGHT 30
+#define SCREEN_WIDTH 40
+#define SCREEN_HEIGHT 20
 
 // block
-#define BLOCK_NUM 30
+#define BLOCK_NUM 40
 #define BLOCK_WIDTH 2 //ブロックの幅
 #define BLOCK_HEIGHT 3 //ブロックの高さ
 #define BLOCK_ROWS 2 //ブロックの段数

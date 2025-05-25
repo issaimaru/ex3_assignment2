@@ -78,10 +78,7 @@ void isCollideBar(Ball *ball, Bar *bar) {
     if((*ball).y == 0 && ((*ball).x > (*bar).x && (*ball).x < (*bar).x + (*bar).width)) {
         (*ball).dy = -(*ball).dy;
     }else if((*ball).y == 0){
-        (*bar).width -= 1;
-        if((*bar).width < 1){
-            (*bar).width = 1; //バーの幅が1未満にならないようにする
-        }
+        (*ball).isGameOver = 1; // ボールが画面の上端に到達したらゲームオーバー)
     }
 }
 
