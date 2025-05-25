@@ -1,6 +1,3 @@
-
-#include <stdarg.h>
-
 #include "io.h"	///	uart defined
 
 SYSCTRL* sysctrl = (SYSCTRL*) SYSCTRL_ADDR;

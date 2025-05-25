@@ -3,14 +3,14 @@
 
 #include <stdbool.h>
 
-typedef struct{
+typedef struct Bar{
     int x;          // バーのX座標
     int y;          // バーのY座標
     int width;      // バーの幅
     int speed;      // バーの移動速度
 }Bar;
 
-typedef struct{
+typedef struct Ball{
     int x;          // ボールのX座標
     int y;          // ボールのY座標
     int width;      // ボールの幅 
@@ -19,7 +19,7 @@ typedef struct{
     int dy;         // ボールのY方向の速度
 }Ball;
 
-typedef struct{
+typedef struct Block{
     int x;          // ブロックのX座標
     int y;          // ブロックのY座標
     int width;      // ブロックの幅

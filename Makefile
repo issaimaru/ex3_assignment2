@@ -4,13 +4,13 @@ SRC_1 = function
 SRC_C = $(SRC).c
 SRC_C1 = $(SRC_1).c
 
-DIR_CC=~/tools/rv32ia/bin
+DIR_CC=/opt/riscv/bin/
 CC=$(DIR_CC)/riscv32-unknown-elf-gcc
 LD=$(DIR_CC)/riscv32-unknown-elf-ld
 DUMP=$(DIR_CC)/riscv32-unknown-elf-objdump
 CFLAGS=-O1
 
-CFLAGS_RV=-march=rv32iazicsr
+CFLAGS_RV=-march=rv32imafd_zicsr
 #CFLAGS_RV+= -DTEST_WFI_BREAK
 OUT= temp
 
@@ -30,7 +30,7 @@ RV_SRC= entry.S printf.c io.c io.h function.c function.h structs.h mhandler.S ..
 all: $(OUT).out $(OUT).dump a.out
 	cp $(OUT).out $(OUT2).out
 	cp $(OUT).dump $(OUT2).dump
-	../bin/release/rv32.exe $(OUT2).out
+	# ../bin/release/rv32.exe $(OUT2).out
 	./a.out
 	rm $(OUT).out
 	rm $(OUT).dump
