@@ -34,6 +34,7 @@ int main() {
         if (ub_rx->num_new_lines == 0) {
             io_putch('\n');
         }
+            */
         // テスト用のボールとブロックを用意
         Ball ball = {0, 0, 1, 1, 2 , 5}; // x, y, width, height, dx, dy
         Block blocks[BLOCK_NUM];
@@ -50,7 +51,7 @@ int main() {
 
         int num = 0;
         while(1) {
-            char key = io_getch();
+            char key = getchar();
             if (key == 'q') {
                 break; // 'q'を押すと終了
             }else if(key == '\n'){
