@@ -86,7 +86,7 @@ void isCollideBar(Ball *ball, Bar *bar) {
 }
 
 //矩形と矩形の衝突アルゴリズムを利用したブロックとボールの衝突判定関数
-void isCollideBlock(Ball *ball, Block *block){
+void isCollideBlock(Ball *ball, Block *block,int *counter) {
     // ボールとブロックの衝突判定
     for (int i = 0; i < BLOCK_NUM; i++) {
         if (block[i].isNotDestroyed == 1) {
@@ -102,6 +102,7 @@ void isCollideBlock(Ball *ball, Block *block){
 
             if (abs(x_m_block - x_m_ball) < x_d_all && abs(y_m_block - y_m_ball) < y_d_all) {
                 block[i].isNotDestroyed = 0;
+                (*counter)++; //ブロックが壊れたらカウンターを増やす
                 //ボールの速度を反転
 
                 int x_overlap = x_d_all - abs(x_m_block - x_m_ball);
@@ -131,7 +132,6 @@ void isCollideBlock(Ball *ball, Block *block){
                     } else {
                         (*ball).dy = -(*ball).dy;
                     }
-                    printf("x_overlap: %d, y_overlap: %d\n", x_overlap, y_overlap);
                 }
 
             }

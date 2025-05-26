@@ -22,16 +22,17 @@
 #define SCREEN_HEIGHT 20
 
 // block
-#define BLOCK_NUM 80
-#define BLOCK_WIDTH 1 //ブロックの幅
+#define BLOCK_NUM 4
+#define BLOCK_WIDTH 10 //ブロックの幅
 #define BLOCK_HEIGHT 3 //ブロックの高さ
-#define BLOCK_ROWS 2 //ブロックの段数
+#define BLOCK_ROWS 1 //ブロックの段数
 
 //monitor mode
 #define INIT_MODE 0
 #define GAME_MODE 1
 #define END_MODE 2
 #define ESCAPE_MODE 3
+#define COMPLETE_MODE 4
 
 #endif // DEFINE_H
 

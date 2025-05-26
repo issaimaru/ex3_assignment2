@@ -35,10 +35,10 @@ void draw_block(int x, int y, int width, int height, char (*buffer)[SCREEN_WIDTH
     }
 }
 
-void update_buffer(struct Ball *ball, struct Block *blocks, struct Bar *bar, char (*buffer)[SCREEN_WIDTH]) {
+void update_buffer(struct Ball *ball, struct Block *blocks, struct Bar *bar, char (*buffer)[SCREEN_WIDTH], int *counter) {
     moveBall(ball); // ボールの移動
     isCollideBar(ball, bar); // ボールとバーの衝突判定
-    isCollideBlock(ball, blocks); // ボールとブロックの衝突判定
+    isCollideBlock(ball, blocks, counter); // ボールとブロックの衝突判定
     init_buffer(buffer);
     //棒の描画
     draw((*bar).x, (*bar).y, (*bar).width, 1, buffer);

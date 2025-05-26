@@ -12,15 +12,16 @@
 
 char buffer[SCREEN_HEIGHT][SCREEN_WIDTH];
 int end = 0;
+int counter;
 
  // ball, wall, barの宣言
-Bar bar = {0, 0, 10, 1};
+Bar bar = {0, 0, 20, 1};
 Ball ball;
 Block blocks[BLOCK_NUM];
 
 // 画面にbufferの内容を出力する関数
 void print_buffer(int mode) {
-    if(mode == 0)update_buffer(&ball, blocks, &bar, buffer);
+    if(mode == 0)update_buffer(&ball, blocks, &bar, buffer,&counter);
     printf("\033[1;1H"); // カーソルを画面の左上に移動
     // bufferの内容を出力
 
@@ -74,7 +75,7 @@ int main() {
     #if !defined(NATIVE_MODE)
     while(terminated == 0){
         end = 0; // 終了フラグをリセット
-
+        counter = 0;
         printf("\nSeed: %d\n", seed);
         ball.width = 3;
         ball.height = 3;
@@ -116,6 +117,8 @@ int main() {
                     timer_interrupt_hook = nop;
                 }else if(ch == ESCAPE_KEY){
                     monitor_mode = ESCAPE_MODE; // エスケープモードに移行
+                }else if(counter >= BLOCK_NUM) {
+                    monitor_mode = COMPLETE_MODE; // ゲームクリアモードに移行
                 }else{
                     moveBar(&bar, &ball, ch); // 棒の移動
                 }
@@ -152,7 +155,29 @@ int main() {
                         break;
                     }
                 }
+            }else if(monitor_mode == COMPLETE_MODE) {
+                timer_interrupt_hook = nop;
+                print_moji("Congratulations! You completed the game!", SCREEN_WIDTH/2, SCREEN_HEIGHT/2,0);
+                print_moji("Press any key to continue", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 1,1);
+                print_moji("Ctrl+Z: terminate the game", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 2,1);
+                print_buffer(1);
+                while (1) {
+                    char ch = io_getch(); // 1文字取得
+                    if (ch == TERMINATE_CODE) {
+                        end = 1;
+                        terminated = 1; // プログラム終了フラグを立てる
+                        printf("Program terminated.\n");
+                        init_buffer(buffer); // 画面をクリア
+                        print_buffer(1); // 画面を更新
+                        break;
+                    }else if (ch != ' ') {
+                        monitor_mode = GAME_MODE; // ゲームモードに戻る
+                        end = 1;
+                        break;
+                    }
+                }
             }
+            
         }
     }
     while(terminated == 1){nop();}
