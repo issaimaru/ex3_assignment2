@@ -51,7 +51,7 @@ int main() {
         ball.dx = u_rand(seed) % 2 + 1;
         ball.dy = u_rand(seed) % 2 + 1;
         ball.isGameOver = 0;
-        printf("\nBall initial position: x=%d, y=%d, dx=%d, dy=%d\n", ball.x, ball.y, ball.dx, ball.dy);
+        printf("\nBall initial position: x=%d, y=%d, dx=%d, dy=%d, u_rand(seed)=%d\n", ball.x, ball.y, ball.dx, ball.dy, u_rand(seed));
 
     #if defined(NATIVE_MODE)
         init_buffer(buffer);
