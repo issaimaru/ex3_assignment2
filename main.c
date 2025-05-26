@@ -83,7 +83,7 @@ int main() {
             }
             // 画面更新はタイマー割り込み(timer_hook)で自動実行
         }
-#endif
     }
+#endif
     return 0;
 }
