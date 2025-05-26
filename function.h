@@ -10,10 +10,14 @@
 #include "structs.h"
 
 void blockinit(Block *block);
-void moveBar(Bar *bar, Ball *ball,char key);
+
+void moveBar(Bar *bar, Ball *ball, char key);
+
 void moveBall(Ball *ball);
-void isCollideBar(Ball *ball, Bar *bar);
-void isCollideBlock(Ball *ball, Block *block, int *counter);
+
+void doIfCollideBar(Ball *ball, const Bar *bar);
+
+void doIfCollideBlock(Ball *ball, Block *block, int *counter);
 
 int mod(int value, int mod_value);
 
