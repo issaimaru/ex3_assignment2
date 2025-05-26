@@ -41,13 +41,13 @@ int seed = 2; // 乱数のシード値
 int terminated = 0; // プログラム終了フラグ
 
 int main() {
+    #if !defined(NATIVE_MODE)
     while(!terminated){
         end = 0; // 終了フラグをリセット
         int seed = 0;
         printf("Press enter...");
         while (1) {
             if (io_getch() == '\n') {
-                seed = (seed + 1) % 100;
                 break;
             }
         }
@@ -60,20 +60,6 @@ int main() {
         ball.isGameOver = 0;
         printf("\nBall initial position: x=%d, y=%d, dx=%d, dy=%d\n", ball.x, ball.y, ball.dx, ball.dy);
 
-    #if defined(NATIVE_MODE)
-        init_buffer(buffer);
-        
-        blockinit(blocks);
-
-        while (1) {
-            if (end) {
-                break;
-            }
-            char ch = getchar();
-            moveBar(&bar, &ball, ch); // 棒の移動
-
-            print_buffer(); // 画面の更新
-        }
 
     #else
         init_buffer(buffer);
