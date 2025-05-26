@@ -43,7 +43,14 @@ int terminated = 0; // プログラム終了フラグ
 int main() {
     while(!terminated){
         end = 0; // 終了フラグをリセット
-        seed += 1;
+        int seed = 0;
+        printf("Press enter...");
+        while (1) {
+            if (io_getch() = "\n") {
+                seed = (seed + 1) % 100;
+                break;
+            }
+        }
         ball.width = 3;
         ball.height = 3;
         ball.x = u_rand(seed) % (SCREEN_WIDTH - ball.width) + 1; // ボールの初期位置をランダムに設定
