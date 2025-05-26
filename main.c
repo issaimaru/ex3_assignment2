@@ -41,9 +41,16 @@ int seed = 2; // 乱数のシード値
 int terminated = 0; // プログラム終了フラグ
 
 int main() {
+    #if !defined(NATIVE_MODE)
     while(!terminated){
         end = 0; // 終了フラグをリセット
-        seed += 1;
+        int seed = 0;
+        printf("Press enter...");
+        while (1) {
+            if (io_getch() == '\n') {
+                break;
+            }
+        }
         ball.width = 3;
         ball.height = 3;
         ball.x = u_rand(seed) % (SCREEN_WIDTH - ball.width) + 1; // ボールの初期位置をランダムに設定
@@ -53,22 +60,7 @@ int main() {
         ball.isGameOver = 0;
         printf("\nBall initial position: x=%d, y=%d, dx=%d, dy=%d, u_rand(seed)=%d\n", ball.x, ball.y, ball.dx, ball.dy, u_rand(seed));
 
-    #if defined(NATIVE_MODE)
-        init_buffer(buffer);
-        
-        blockinit(blocks);
 
-        while (1) {
-            if (end) {
-                break;
-            }
-            char ch = getchar();
-            moveBar(&bar, &ball, ch); // 棒の移動
-
-            print_buffer(); // 画面の更新
-        }
-
-    #else
         init_buffer(buffer);
         blockinit(blocks);
 
@@ -91,7 +83,7 @@ int main() {
             }
             // 画面更新はタイマー割り込み(timer_hook)で自動実行
         }
-#endif
     }
+#endif
     return 0;
 }
