@@ -4,7 +4,7 @@ SRC_1 = function
 SRC_C = $(SRC).c
 SRC_C1 = $(SRC_1).c
 
-DIR_CC=/opt/riscv/bin/
+DIR_CC=~/tools/rv32ia/bin
 CC=$(DIR_CC)/riscv32-unknown-elf-gcc
 LD=$(DIR_CC)/riscv32-unknown-elf-ld
 DUMP=$(DIR_CC)/riscv32-unknown-elf-objdump
