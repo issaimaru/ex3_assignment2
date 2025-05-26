@@ -37,29 +37,28 @@ void timer_hook() {
     print_buffer();
 }
 
-int seed = 2; // 乱数のシード値
+int seed = 0; // 乱数
 int terminated = 0; // プログラム終了フラグ
 
 int main() {
     #if !defined(NATIVE_MODE)
     while(!terminated){
         end = 0; // 終了フラグをリセット
-        int seed = 0;
         printf("Press enter...");
         while (1) {
-            seed = (seed + 1) % 1000
+            seed = (seed + 1) % 1000;
             if (io_getch() == '\n') {
                 break;
             }
         }
         ball.width = 3;
         ball.height = 3;
-        ball.x = u_rand(seed) % (SCREEN_WIDTH - ball.width) + 1; // ボールの初期位置をランダムに設定
-        ball.y = u_rand(seed) % (SCREEN_HEIGHT - ball.height - BLOCK_HEIGHT * BLOCK_ROWS) + 1; // ボールの初期位置をランダムに設定
-        ball.dx = u_rand(seed) % 2 + 1;
-        ball.dy = u_rand(seed) % 2 + 1;
+        ball.x = seed % (SCREEN_WIDTH - ball.width) + 1; // ボールの初期位置をランダムに設定
+        ball.y = seed % (SCREEN_HEIGHT - ball.height - BLOCK_HEIGHT * BLOCK_ROWS) + 1; // ボールの初期位置をランダムに設定
+        ball.dx = seed % 3 + 1;
+        ball.dy = seed % 3 + 1;
         ball.isGameOver = 0;
-        printf("\nBall initial position: x=%d, y=%d, dx=%d, dy=%d, u_rand(seed)=%d\n", ball.x, ball.y, ball.dx, ball.dy, u_rand(seed));
+        printf("\nBall initial position: x=%d, y=%d, dx=%d, dy=%d, u_rand(seed)=%d\n", ball.x, ball.y, ball.dx, ball.dy, seed);
 
 
         init_buffer(buffer);
@@ -76,9 +75,11 @@ int main() {
             if (ch == TERMINATE_CODE) {
                 end = 1;
                 printf("\nCtrl-Z detected...\n");
+                /*
                 unsigned mask = 0x80;
                 asm volatile("csrc mie, %0" :: "r"(mask));
                 sysctrl->mtimecmp = (unsigned long long)-1;
+                */
             } else {
                 moveBar(&bar, &ball, ch); // 棒の移動
             }
@@ -86,5 +87,6 @@ int main() {
         }
     }
 #endif
+    printf("rand() :%d\n", seed);
     return 0;
 }
