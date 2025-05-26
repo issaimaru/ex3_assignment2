@@ -61,7 +61,6 @@ int main() {
         printf("\nBall initial position: x=%d, y=%d, dx=%d, dy=%d\n", ball.x, ball.y, ball.dx, ball.dy);
 
 
-    #else
         init_buffer(buffer);
         blockinit(blocks);
 
