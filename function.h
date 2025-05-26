@@ -15,5 +15,7 @@ void moveBall(Ball *ball);
 void isCollideBar(Ball *ball, Bar *bar);
 void isCollideBlock(Ball *ball, Block *block);
 
+int mod(int value, int mod_value);
+
 
 #endif // FUNCTION_H

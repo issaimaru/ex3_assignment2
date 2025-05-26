@@ -68,16 +68,16 @@ void moveBall(Ball *ball){
         (*ball).x = (*ball).x < 0 ? 0 : SCREEN_WIDTH - (*ball).width;
         (*ball).dx = -(*ball).dx;
     }
-    if ((*ball).y < 0 || (*ball).y + (*ball).height > SCREEN_HEIGHT) {
+    if ((*ball).y + (*ball).height > SCREEN_HEIGHT) {
         (*ball).y = (*ball).y < 0 ? 0 : SCREEN_HEIGHT - (*ball).height;
         (*ball).dy = -(*ball).dy;
     }
 }
 
 void isCollideBar(Ball *ball, Bar *bar) {
-    if((*ball).y == 0 && ((*ball).x > (*bar).x && (*ball).x < (*bar).x + (*bar).width)) {
+    if((*bar).y - (*ball).y <= abs((*ball).dy) && (*bar).y - (*ball).y >= 0 && ((*ball).x > (*bar).x && (*ball).x < (*bar).x + (*bar).width)) {
         (*ball).dy = -(*ball).dy;
-    }else if((*ball).y == 0){
+    }else if((*ball).y < 0){
         (*ball).isGameOver = 1; // ボールが画面の上端に到達したらゲームオーバー)
     }
 }
@@ -133,4 +133,11 @@ void isCollideBlock(Ball *ball, Block *block){
             }
         }
     }
+}
+
+int mod(int value, int mod_value) {
+    while(value > mod_value){
+        value -= mod_value;
+    }
+    return value;
 }

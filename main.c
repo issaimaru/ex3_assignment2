@@ -48,18 +48,15 @@ int main() {
     #if !defined(NATIVE_MODE)
     while(!terminated){
         end = 0; // 終了フラグをリセット
-        printf("Press enter...");
-        
-        seed = (seed + 1) % 1000;
+
         printf("\nSeed: %d\n", seed);
         ball.width = 3;
         ball.height = 3;
-        ball.x = seed % (SCREEN_WIDTH - ball.width) + 1; // ボールの初期位置をランダムに設定
-        ball.y = seed % (SCREEN_HEIGHT - ball.height - BLOCK_HEIGHT * BLOCK_ROWS) + 1; // ボールの初期位置をランダムに設定
-        ball.dx = seed % 2 + 1;
-        ball.dy = seed % 2 + 1;
+        ball.x = mod(seed, SCREEN_WIDTH - ball.width) + 1; // ボールの初期位置をランダムに設定
+        ball.y = mod(seed, SCREEN_HEIGHT - ball.height - BLOCK_HEIGHT * BLOCK_ROWS) + 1; // ボールの初期位置をランダムに設定
+        ball.dx = mod(seed, 2) + 1;
+        ball.dy = mod(seed, 2) + 1;
         ball.isGameOver = 0;
-        printf("\nBall initial position: x=%d, y=%d, dx=%d, dy=%d, seed=%d\n", ball.x, ball.y, ball.dx, ball.dy,seed);
 
         init_buffer(buffer);
         blockinit(blocks);
@@ -76,16 +73,12 @@ int main() {
             char ch = io_getch(); // 1文字取得
             if (ch == TERMINATE_CODE) {
                 end = 1;
-                /*
-                unsigned mask = 0x80;
-                asm volatile("csrc mie, %0" :: "r"(mask));
-                sysctrl->mtimecmp = (unsigned long long)-1;
-                */
                 timer_interrupt_hook = nop;
             } else {
                 moveBar(&bar, &ball, ch); // 棒の移動
             }
             // 画面更新はタイマー割り込み(timer_hook)で自動実行
+            seed = mod(seed+1, 1000);
         }
     }
 #endif
