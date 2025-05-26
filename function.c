@@ -134,3 +134,12 @@ void isCollideBlock(Ball *ball, Block *block){
         }
     }
 }
+
+
+unsigned int u_rand(unsigned int seed) {
+    unsigned int a = 1103515245;
+    unsigned int c = 12345;
+    unsigned int m = 1U << 31;  // 2^31
+    
+    return (a * seed + c) % m;
+}

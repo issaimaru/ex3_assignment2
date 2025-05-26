@@ -15,4 +15,6 @@ void moveBall(Ball *ball);
 void isCollideBar(Ball *ball, Bar *bar);
 void isCollideBlock(Ball *ball, Block *block);
 
+unsigned int u_rand(unsigned int seed);
+
 #endif // FUNCTION_H
