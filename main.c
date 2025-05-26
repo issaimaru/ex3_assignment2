@@ -34,10 +34,14 @@ void print_buffer() {
 
 // タイマー割り込みで画面を更新
 void timer_hook() {
-    if (!end) print_buffer();
+    print_buffer();
 }
 
-int seed = 0; // 乱数
+void nop() {
+    // 何もしない関数
+}
+
+int seed = 2; // 乱数のシード値
 int terminated = 0; // プログラム終了フラグ
 
 int main() {
@@ -45,21 +49,17 @@ int main() {
     while(!terminated){
         end = 0; // 終了フラグをリセット
         printf("Press enter...");
-        while (1) {
-            seed = (seed + 1) % 1000;
-            if (io_getch() == '\n') {
-                break;
-            }
-        }
+        
+        seed = (seed + 1) % 1000;
+        printf("\nSeed: %d\n", seed);
         ball.width = 3;
         ball.height = 3;
         ball.x = seed % (SCREEN_WIDTH - ball.width) + 1; // ボールの初期位置をランダムに設定
         ball.y = seed % (SCREEN_HEIGHT - ball.height - BLOCK_HEIGHT * BLOCK_ROWS) + 1; // ボールの初期位置をランダムに設定
-        ball.dx = seed % 3 + 1;
-        ball.dy = seed % 3 + 1;
+        ball.dx = seed % 2 + 1;
+        ball.dy = seed % 2 + 1;
         ball.isGameOver = 0;
-        printf("\nBall initial position: x=%d, y=%d, dx=%d, dy=%d, u_rand(seed)=%d\n", ball.x, ball.y, ball.dx, ball.dy, seed);
-
+        printf("\nBall initial position: x=%d, y=%d, dx=%d, dy=%d, seed=%d\n", ball.x, ball.y, ball.dx, ball.dy,seed);
 
         init_buffer(buffer);
         blockinit(blocks);
@@ -69,17 +69,19 @@ int main() {
         enable_timer_interrupt();
 
         while (1) {
-            if (end) break;
+            if (end) {
+                break;
+            }
             // 割り込みバッファにデータがあるか監視
             char ch = io_getch(); // 1文字取得
             if (ch == TERMINATE_CODE) {
                 end = 1;
-                printf("\nCtrl-Z detected...\n");
                 /*
                 unsigned mask = 0x80;
                 asm volatile("csrc mie, %0" :: "r"(mask));
                 sysctrl->mtimecmp = (unsigned long long)-1;
                 */
+                timer_interrupt_hook = nop;
             } else {
                 moveBar(&bar, &ball, ch); // 棒の移動
             }
@@ -87,6 +89,5 @@ int main() {
         }
     }
 #endif
-    printf("rand() :%d\n", seed);
     return 0;
 }
