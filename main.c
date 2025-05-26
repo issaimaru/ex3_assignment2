@@ -74,6 +74,7 @@ int main() {
      }
 
 #else
+     
     init_buffer(buffer);
     blockinit(blocks);
 
