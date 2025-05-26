@@ -34,7 +34,7 @@ void print_buffer(int mode) {
     }
 }
 
-void print_moji(const char *moji, int x, int y,int isRow) {
+void buffer_moji(const char *moji, int x, int y,int isRow) {
     if(!isRow) init_buffer(buffer);
     int len = strlen(moji);
     for(int i = 0; i < len; i++) {
@@ -42,20 +42,20 @@ void print_moji(const char *moji, int x, int y,int isRow) {
     }
 }
 
-void print_gameover() {
-    print_moji("GAME OVER", SCREEN_WIDTH/2, SCREEN_HEIGHT/2,0);
-    print_moji("Enter: continue the game", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 1,1);
-    print_moji("Ctrl+Z: terminate the game", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 2,1);
+void buffer_gameover() {
+    buffer_moji("GAME OVER", SCREEN_WIDTH/2, SCREEN_HEIGHT/2,0);
+    buffer_moji("Enter: continue the game", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 1,1);
+    buffer_moji("Ctrl+Z: terminate the game", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 2,1);
 }
 
-void print_initgame(){
-    print_moji("This is a game of Breakout!", SCREEN_WIDTH/2, SCREEN_HEIGHT/2,0);
-    print_moji("please press any key!!", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 1,1);
+void buffer_initgame(){
+    buffer_moji("This is a game of Breakout!", SCREEN_WIDTH/2, SCREEN_HEIGHT/2,0);
+    buffer_moji("please press any key!!", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 1,1);
 }
 
-void print_escapemode() {
-    print_moji("Escape mode", SCREEN_WIDTH/2, SCREEN_HEIGHT/2,1);
-    print_moji("Press any key to return to the game", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 1,1);
+void buffer_escapemode() {
+    buffer_moji("Escape mode", SCREEN_WIDTH/2, SCREEN_HEIGHT/2,1);
+    buffer_moji("Press any key to return to the game", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 1,1);
 }
 
 // タイマー割り込みで画面を更新
@@ -98,7 +98,7 @@ int main() {
             // 割り込みバッファにデータがあるか監視
             if(monitor_mode == INIT_MODE) {
                 timer_interrupt_hook = nop;
-                print_initgame();
+                buffer_initgame();
                 print_buffer(1);
                 while (1) {
                     char ch = io_getch(); // 1文字取得
@@ -126,7 +126,7 @@ int main() {
                 seed = mod(seed+1, 1000);
             }else if(monitor_mode == END_MODE) {
                 timer_interrupt_hook = nop;
-                print_gameover();
+                buffer_gameover();
                 print_buffer(1);
                 while (1) {
                     char ch = io_getch(); // 1文字取得
@@ -145,7 +145,7 @@ int main() {
                 }
             }else if(monitor_mode == ESCAPE_MODE) {
                 timer_interrupt_hook = nop;
-                print_escapemode();
+                buffer_escapemode();
                 print_buffer(1);
                 while (1) {
                     char ch = io_getch(); // 1文字取得
@@ -157,9 +157,9 @@ int main() {
                 }
             }else if(monitor_mode == COMPLETE_MODE) {
                 timer_interrupt_hook = nop;
-                print_moji("Congratulations! You completed the game!", SCREEN_WIDTH/2, SCREEN_HEIGHT/2,0);
-                print_moji("Press any key to continue", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 1,1);
-                print_moji("Ctrl+Z: terminate the game", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 2,1);
+                buffer_moji("Congratulations! You completed the game!", SCREEN_WIDTH/2, SCREEN_HEIGHT/2,0);
+                buffer_moji("Press any key to continue", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 1,1);
+                buffer_moji("Ctrl+Z: terminate the game", SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 2,1);
                 print_buffer(1);
                 while (1) {
                     char ch = io_getch(); // 1文字取得
