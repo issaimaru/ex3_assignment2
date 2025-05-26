@@ -46,7 +46,7 @@ int main() {
         int seed = 0;
         printf("Press enter...");
         while (1) {
-            if (io_getch() = "\n") {
+            if (io_getch() == '\n') {
                 seed = (seed + 1) % 100;
                 break;
             }
