@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "function.h"
 #include "structs.h"
 #include "define.h"
@@ -12,7 +11,7 @@ void init_buffer(char (*buffer)[SCREEN_WIDTH]) {
     }
 }
 
-void draw(int x, int y, int width, int height, char (*buffer)[SCREEN_WIDTH]) {
+void draw(const int x, const int y, const int width, const int height, char (*buffer)[SCREEN_WIDTH]) {
     if (x < 0 || y < 0 || x + width > SCREEN_WIDTH || y + height > SCREEN_HEIGHT) return;
     for(int i = x; i < x + width; i++) {
         buffer[y + height - 1][i] = '-';
@@ -24,7 +23,7 @@ void draw(int x, int y, int width, int height, char (*buffer)[SCREEN_WIDTH]) {
     }
 }
 
-void draw_block(int x, int y, int width, int height, char (*buffer)[SCREEN_WIDTH]) {
+void draw_block(const int x, const int y, const int width, const int height, char (*buffer)[SCREEN_WIDTH]) {
     for (int i = x; i < x + width; i++) {
         buffer[y][i] = '-';
         buffer[y + height - 1][i] = '-';
@@ -35,16 +34,16 @@ void draw_block(int x, int y, int width, int height, char (*buffer)[SCREEN_WIDTH
     }
 }
 
-void update_buffer(struct Ball *ball, struct Block *blocks, struct Bar *bar, char (*buffer)[SCREEN_WIDTH], int *counter) {
+void update_buffer(Ball *ball, Block *blocks, const Bar *bar, char (*buffer)[SCREEN_WIDTH], int *counter) {
     moveBall(ball); // ボールの移動
-    isCollideBar(ball, bar); // ボールとバーの衝突判定
-    isCollideBlock(ball, blocks, counter); // ボールとブロックの衝突判定
+    doIfCollideBar(ball, bar); // ボールとバーの衝突判定
+    doIfCollideBlock(ball, blocks, counter); // ボールとブロックの衝突判定
     init_buffer(buffer);
     //棒の描画
-    draw((*bar).x, (*bar).y, (*bar).width, 1, buffer);
+    draw(bar->x, bar->y, bar->width, 1, buffer);
 
     //ボールの描画
-    draw((*ball).x, (*ball).y, (*ball).width, (*ball).height, buffer);
+    draw(ball->x, ball->y, ball->width, ball->height, buffer);
 
     //ブロックの描画
     for (int i = 0; i < BLOCK_NUM; i++) {

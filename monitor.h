@@ -16,7 +16,7 @@ void draw(int x, int y, int width, int height, char (*buffer)[SCREEN_WIDTH]);
 
 void draw_block(int x, int y, int width, int height, char (*buffer)[SCREEN_WIDTH]);
 
-void update_buffer(struct Ball *ball, struct Block *blocks, struct Bar *bar, char (*buffer)[SCREEN_WIDTH],int *counter);
+void update_buffer(struct Ball *ball, struct Block *blocks, const struct Bar *bar, char (*buffer)[SCREEN_WIDTH],int *counter);
 
-void print_gameover();
+void buffer_gameover();
 #endif // MONITOR_H
