@@ -24,7 +24,7 @@ void blockinit(Block *block) {
 
 //棒を動かす関数
 //デバック完了、エラーなし(2025/05/12)
-void moveBar(Bar *bar, Ball *ball, char key) {
+void moveBar(Bar *bar, char key) {
     switch (key) {
         case LEFT_KEY:
             if (bar->x > 0) {

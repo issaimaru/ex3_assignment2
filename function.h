@@ -11,7 +11,7 @@
 
 void blockinit(Block *block);
 
-void moveBar(Bar *bar, Ball *ball, char key);
+void moveBar(Bar *bar, char key);
 
 void moveBall(Ball *ball);
 

@@ -120,7 +120,7 @@ int main() {
                 }else if(counter >= BLOCK_NUM) {
                     monitor_mode = COMPLETE_MODE; // ゲームクリアモードに移行
                 }else{
-                    moveBar(&bar, &ball, ch); // 棒の移動
+                    moveBar(&bar, ch); // 棒の移動
                 }
                 // 画面更新はタイマー割り込み(timer_hook)で自動実行
                 seed = mod(seed+1, 1000);
