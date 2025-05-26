@@ -34,7 +34,7 @@ void print_buffer() {
 
 // タイマー割り込みで画面を更新
 void timer_hook() {
-    print_buffer();
+    if (!end) print_buffer();
 }
 
 int seed = 0; // 乱数
