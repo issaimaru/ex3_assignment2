@@ -24,7 +24,9 @@ void set_uart_ID(int uidx) {
 
 void _io_putch(char ch) {
     UART* uart = _uart[UART_CHAN_ID];
-	while (UART_TX_FULL(uart)) {} /// while (tx_full == 1);
+	while (UART_TX_FULL(uart)) {
+
+	} /// while (tx_full == 1);
 	uart->data = ch;
 }
 
@@ -42,7 +44,7 @@ void _UARTBuf_putch(char ch) {
 
 char _io_getch(void) {
     UART* uart = _uart[UART_CHAN_ID];
-    while (UART_RX_EMPTY(uart)) {
+    if (UART_RX_EMPTY(uart)) {
         return ' ';
     } /// while (rx_empty == 1);
     return uart->data;
