@@ -6,6 +6,7 @@
 #define RIGHT_KEY 'd'
 #define UP_KEY 'w'
 #define DOWN_KEY 's'
+#define ESCAPE_KEY 0x1b // EscapeキーのASCIIコード
 
 // bar speed definitions
 #define MAX_BAR_SPEED 10
@@ -21,10 +22,16 @@
 #define SCREEN_HEIGHT 20
 
 // block
-#define BLOCK_NUM 40
-#define BLOCK_WIDTH 2 //ブロックの幅
+#define BLOCK_NUM 80
+#define BLOCK_WIDTH 1 //ブロックの幅
 #define BLOCK_HEIGHT 3 //ブロックの高さ
 #define BLOCK_ROWS 2 //ブロックの段数
+
+//monitor mode
+#define INIT_MODE 0
+#define GAME_MODE 1
+#define END_MODE 2
+#define ESCAPE_MODE 3
 
 #endif // DEFINE_H
 

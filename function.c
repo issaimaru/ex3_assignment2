@@ -77,6 +77,9 @@ void moveBall(Ball *ball){
 void isCollideBar(Ball *ball, Bar *bar) {
     if((*bar).y - (*ball).y <= abs((*ball).dy) && (*bar).y - (*ball).y >= 0 && ((*ball).x > (*bar).x && (*ball).x < (*bar).x + (*bar).width)) {
         (*ball).dy = -(*ball).dy;
+        if ((*ball).y < 0) {
+            (*ball).y = 0; // ボールが画面の上端に到達したら位置を修正
+        }
     }else if((*ball).y < 0){
         (*ball).isGameOver = 1; // ボールが画面の上端に到達したらゲームオーバー)
     }
@@ -116,10 +119,10 @@ void isCollideBlock(Ball *ball, Block *block){
                 if (was_x_separated && !was_y_separated) {
                     // 前フレームはx軸で離れていた→x軸で衝突
                     (*ball).dx = -(*ball).dx;
-                } else if (!was_x_separated && was_y_separated) {
+                }else if (!was_x_separated && was_y_separated) {
                     // 前フレームはy軸で離れていた→y軸で衝突
                     (*ball).dy = -(*ball).dy;
-                } else {
+                }else{
                     // 斜め進入や両方重なりの場合は最小overlapで判定
                     int x_overlap = x_d_all - abs(x_m_block - x_m_ball);
                     int y_overlap = y_d_all - abs(y_m_block - y_m_ball);
@@ -128,6 +131,7 @@ void isCollideBlock(Ball *ball, Block *block){
                     } else {
                         (*ball).dy = -(*ball).dy;
                     }
+                    printf("x_overlap: %d, y_overlap: %d\n", x_overlap, y_overlap);
                 }
 
             }
