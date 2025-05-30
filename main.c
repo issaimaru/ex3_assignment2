@@ -15,7 +15,7 @@ int end = 0;
 int counter;
 
  // ball, wall, barの宣言
-Bar bar = {0, 0, 20, 1};
+Bar bar = {0, 0, 15, 1};
 Ball ball;
 Block blocks[BLOCK_NUM];
 
@@ -34,11 +34,15 @@ void print_buffer(int mode) {
     }
 }
 
-void print_moji(const char *moji, int x, int y,int isRow) {
+void print_moji(const char *moji, int x, int y, int isRow) {
+    if (moji == NULL) return;
     if(!isRow) init_buffer(buffer);
-    int len = strlen(moji);
+    int len = 0;
+    while (moji[len] != '\0' && len < 100) len++;
+    if (len <= 0 || len > 100) return;
     for(int i = 0; i < len; i++) {
-        buffer[y][x - len/2 + i] = moji[i];
+        int px = x - len/2 + i;
+        buffer[y][px] = moji[i];
     }
 }
 
@@ -67,16 +71,18 @@ void nop() {
     // 何もしない関数
 }
 
-int seed = 2; // 乱数のシード値
+int seed = 81; // 乱数のシード値
 int monitor_mode = INIT_MODE; // モニターモードの初期値
 int terminated = 0; // プログラム終了フラグ
 
 int main() {
+    for(int i=0;i<30;i++){
+        printf("\n");
+    }
     #if !defined(NATIVE_MODE)
     while(terminated == 0){
         end = 0; // 終了フラグをリセット
         counter = 0;
-        printf("\nSeed: %d\n", seed);
         ball.width = 3;
         ball.height = 3;
         ball.x = mod(seed, SCREEN_WIDTH - ball.width) + 1; // ボールの初期位置をランダムに設定
@@ -137,7 +143,7 @@ int main() {
                         init_buffer(buffer); // 画面をクリア
                         print_buffer(1); // 画面を更新
                         break;
-                    } else if (ch == '\n'){
+                    } else if (ch == '\n' || ch == '\r') {
                         monitor_mode = GAME_MODE; // ゲームモードに戻る
                         end = 1;
                         break;

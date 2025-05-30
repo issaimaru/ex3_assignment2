@@ -22,10 +22,10 @@
 #define SCREEN_HEIGHT 20
 
 // block
-#define BLOCK_NUM 4
+#define BLOCK_NUM 8
 #define BLOCK_WIDTH 10 //ブロックの幅
 #define BLOCK_HEIGHT 3 //ブロックの高さ
-#define BLOCK_ROWS 1 //ブロックの段数
+#define BLOCK_ROWS 2 //ブロックの段数
 
 //monitor mode
 #define INIT_MODE 0
